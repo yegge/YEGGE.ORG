@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<head>
+	<script>
+	(() => {
+	  const KEY = 'theme'; // 'dark' | 'light' | (unset = system)
+	  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+	  const stored = localStorage.getItem(KEY);
+	  const root = document.documentElement;
+
+	  function apply(theme) {
+	    root.classList.remove('light-mode','dark-mode');
+	    if (theme === 'dark') root.classList.add('dark-mode');
+	    else if (theme === 'light') root.classList.add('light-mode');
+	    else root.classList.add(mq.matches ? 'dark-mode' : 'light-mode'); // system default
+	  }
+
+	  apply(stored ?? 'system');
+
+	  // If user hasn't chosen a theme, follow OS changes live
+	  mq.addEventListener?.('change', () => {
+	    if (!localStorage.getItem(KEY)) apply('system');
+	  });
+	})();
+	</script>
+	
+	</head>
+	<body>

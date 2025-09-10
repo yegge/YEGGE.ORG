@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Music Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Load new fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 40px;
+            background: #171717;
+            color: #e8e8e8;
+            font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+        }
+        .font-heading {
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: -0.03em;
+        }
+        .text-accent-admin {
+            color: #ef4444; /* Admin Red Accent */
+        }
+        
+        /* Buttons */
+        .btn-custom {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            color: #e8e8e8;
+        }
+        .btn-custom:hover {
+            border-color: #555;
+            background: #111;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+        }
+        .btn-custom-primary { background: #2563eb; border-color: #2563eb; color: white; }
+        .btn-custom-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+        .btn-custom-danger { background: #dc2626; border-color: #dc2626; color: white; }
+        .btn-custom-danger:hover { background: #b91c1c; border-color: #b91c1c; }
+        .btn-custom-sm { padding: 0.5rem 1rem; font-size: 0.875rem; }
+
+        /* Forms */
+        .form-input-custom {
+            background-color: #0a0a0a;
+            border: 1px solid #333;
+            color: #e8e8e8;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .form-input-custom:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .fieldset-custom {
+            border: 1px solid #333;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+        .fieldset-custom legend {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: bold;
+            font-size: 1.25rem;
+            padding: 0 0.5rem;
+        }
+
+        /* Table */
+        .table-container {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table-custom { width: 100%; text-align: left; border-collapse: collapse; }
+        .table-custom th { padding: 1rem; border-bottom: 2px solid #333; font-family: 'Space Grotesk', sans-serif;}
+        .table-custom td { padding: 1rem; border-bottom: 1px solid #1a1a1a; }
+        .table-custom tr:last-child td { border-bottom: none; }
+        .table-custom tr:hover td { background: #111; }
+        
+        /* Status Pills */
+        .status-pill { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+        .status-released { background-color: #166534; color: #bbf7d0; }
+        .status-removed { background-color: #991b1b; color: #fecaca; }
+        .status-in-development { background-color: #9a3412; color: #fdba74; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="app-container" class="max-w-7xl mx-auto">
+        
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-6 border-b border-gray-700/50 mb-8 gap-4">
+            <div>
+                <h1 class="text-4xl font-bold text-white font-heading">Music Catalog</h1>
+                <p class="text-accent-admin uppercase text-sm font-semibold tracking-widest mt-1">Admin Panel</p>
+            </div>
+            <a href="index.html" class="btn-custom">View Public Site</a>
+        </header>
+
+        <main id="content-area">
+            <!-- Admin content will be injected here -->
+        </main>
+    </div>
+
+    <!-- HTML TEMPLATES (hidden by default) -->
+    <div id="templates" class="hidden">
+        <!-- Admin: Dashboard -->
+        <template id="template-admin-dashboard">
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-3xl font-bold text-white font-heading">Dashboard</h2>
+                    <button class="btn-custom btn-custom-primary" onclick="location.hash = '#/admin/new'">+ Add New Album</button>
+                </div>
+                <div class="table-container">
+                    <table class="table-custom">
+                        <thead>
+                            <tr><th>Album Name</th><th>Artist</th><th>Status</th><th>Release Date</th><th class="text-right">Actions</th></tr>
+                        </thead>
+                        <tbody id="admin-album-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </template>
+        
+        <!-- Admin: Album Form (Add/Edit) -->
+        <template id="template-album-form">
+            <div>
+                <h2 id="form-title" class="text-3xl font-bold text-white mb-6 font-heading"></h2>
+                <form id="album-form" class="space-y-8">
+                    <input type="hidden" id="album-id" name="id">
+                    <fieldset class="fieldset-custom"><legend>Core Information</legend><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"><div><label for="album_name" class="block mb-2 font-medium">Album Name</label><input type="text" id="album_name" name="album_name" class="form-input-custom" required></div><div><label for="album_artist" class="block mb-2 font-medium">Artist</label><select id="album_artist" name="album_artist" class="form-input-custom" required><option value="Yegge">Yegge</option><option value="Angershade">Angershade</option><option value="The Corruptive">The Corruptive</option></select></div><div><label for="album_type" class="block mb-2 font-medium">Album Type</label><select id="album_type" name="album_type" class="form-input-custom"><option value="EP">EP</option><option value="LP">LP</option><option value="SP">SP</option><option value="Compilation">Compilation</option></select></div><div><label for="catalog_number" class="block mb-2 font-medium">Catalog Number (1-999)</label><input type="number" id="catalog_number" name="catalog_number" min="1" max="999" class="form-input-custom"></div></div></fieldset>
+                    <fieldset class="fieldset-custom"><legend>Release Management</legend><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"><div><label for="album_status" class="block mb-2 font-medium">Status</label><select id="album_status" name="album_status" class="form-input-custom" required><option value="In Development">In Development</option><option value="Released">Released</option><option value="Removed">Removed</option></select></div><div><label for="release_date" class="block mb-2 font-medium">Release Date (Optional)</label><input type="date" id="release_date" name="release_date" class="form-input-custom"><p class="text-xs text-gray-500 mt-1">Leave blank to auto-set based on status.</p></div></div></fieldset>
+                    <fieldset class="fieldset-custom"><legend>Media & Links</legend><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"><div><label for="front_cover_url" class="block mb-2 font-medium">Front Cover URL</label><input type="url" id="front_cover_url" name="front_cover_url" class="form-input-custom" placeholder="https://..."></div><div><label for="upc" class="block mb-2 font-medium">UPC</label><input type="text" id="upc" name="upc" class="form-input-custom"></div><div><label for="physical_media_url" class="block mb-2 font-medium">Physical Media URL</label><input type="url" id="physical_media_url" name="physical_media_url" class="form-input-custom" placeholder="https://..."></div><div><label for="digital_download_url" class="block mb-2 font-medium">Digital Download URL</label><input type="url" id="digital_download_url" name="digital_download_url" class="form-input-custom" placeholder="https://..."></div></div></fieldset>
+                    <fieldset class="fieldset-custom"><legend>Streaming URLs</legend><div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4"><div><label for="stream_spotify_url" class="block mb-2 font-medium">Spotify</label><input type="url" id="stream_spotify_url" name="stream_spotify_url" class="form-input-custom" placeholder="https://..."></div><div><label for="stream_apple_music_url" class="block mb-2 font-medium">Apple Music</label><input type="url" id="stream_apple_music_url" name="stream_apple_music_url" class="form-input-custom" placeholder="https://..."></div><div><label for="stream_youtube_music_url" class="block mb-2 font-medium">YouTube Music</label><input type="url" id="stream_youtube_music_url" name="stream_youtube_music_url" class="form-input-custom" placeholder="https://..."></div><div><label for="stream_bandcamp_url" class="block mb-2 font-medium">Bandcamp</label><input type="url" id="stream_bandcamp_url" name="stream_bandcamp_url" class="form-input-custom" placeholder="https://..."></div></div></fieldset>
+                    <fieldset class="fieldset-custom"><legend>Commentary</legend><div class="mt-4"><label for="album_commentary" class="block mb-2 font-medium">Album Commentary</label><textarea id="album_commentary" name="album_commentary" rows="6" class="form-input-custom"></textarea></div></fieldset>
+                    <div class="flex justify-between items-center pt-6 border-t border-gray-700/50"><div><button type="submit" class="btn-custom btn-custom-primary">Save Album</button><button type="button" class="btn-custom ml-2" onclick="location.hash = '#/admin'">Cancel</button></div><div id="delete-album-container"></div></div>
+                </form>
+            </div>
+        </template>
+
+        <!-- Admin: Track Manager -->
+        <template id="template-track-manager">
+            <div>
+                 <button class="btn-custom mb-6" onclick="location.hash = '#/admin'">&larr; Back to Dashboard</button>
+                <h2 class="text-3xl font-bold text-white mb-2 font-heading">Manage Tracks</h2>
+                <h3 id="track-manager-album-title" class="text-xl text-gray-400 mb-6"></h3>
+                <div class="space-y-4 mb-8" id="track-list"></div>
+                <form id="add-track-form" class="bg-black/20 p-6 rounded-lg border border-gray-700/50"><h4 class="text-lg font-bold text-white mb-4 font-heading">Add New Track</h4><input type="hidden" name="album_id" id="track-form-album-id"><div class="grid grid-cols-1 md:grid-cols-4 gap-4"><input type="number" name="track_no" placeholder="No." class="form-input-custom" required><input type="text" name="track_name" placeholder="Track Name" class="form-input-custom md:col-span-2" required><input type="number" name="duration_seconds" placeholder="Duration (sec)" class="form-input-custom" required></div><button type="submit" class="btn-custom btn-custom-primary mt-4">Add Track</button></form>
+            </div>
+        </template>
+    </div>
+
+<script type="module">
+    // --- DATABASE SIMULATION ---
+    let db_albums = [];
+    let db_tracks = [];
+
+    // --- DATA PERSISTENCE ---
+    function saveDataToStorage() {
+        localStorage.setItem('music_db_albums', JSON.stringify(db_albums));
+        localStorage.setItem('music_db_tracks', JSON.stringify(db_tracks));
+    }
+
+    function loadDataFromStorage() {
+        const storedAlbums = localStorage.getItem('music_db_albums');
+        const storedTracks = localStorage.getItem('music_db_tracks');
+        if (storedAlbums && storedTracks) {
+            db_albums = JSON.parse(storedAlbums);
+            db_tracks = JSON.parse(storedTracks);
+        } else {
+            seedData(); // If no data, seed it for the first time
+        }
+    }
+
+    // --- HELPER FUNCTIONS & TRIGGERS ---
+    function seconds_mmss(s) { return s === null || s < 0 ? null : `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }
+
+    function simulate_trg_album_defaults(album) {
+        if (!album.id) {
+            let candidate;
+            do { candidate = Math.floor(10000 + Math.random() * 90000); } while (db_albums.some(a => a.id === candidate));
+            album.id = candidate;
+        }
+        const today = new Date().toISOString().split('T')[0];
+        if (album.album_status === 'In Development') album.release_date = null;
+        else if (album.album_status === 'Released' && !album.release_date) album.release_date = today;
+        else if (album.album_status === 'Removed' && !album.release_date) album.release_date = today;
+        const prefixes = { 'Yegge': 'YEG', 'Angershade': 'ANG', 'The Corruptive': 'COR' };
+        album.catalog_prefix = prefixes[album.album_artist] || '';
+        return album;
+    }
+
+    function simulate_fn_update_album_duration(albumId) {
+        const album = db_albums.find(a => a.id === albumId);
+        if (album) {
+            album.album_duration_seconds = db_tracks.filter(t => t.album_id === albumId).reduce((sum, t) => sum + (parseInt(t.duration_seconds, 10) || 0), 0);
+        }
+    }
+
+    // --- INITIAL DATA SEEDING ---
+    function seedData() {
+        let testAlbum = { album_name: 'Test LP', album_type: 'LP', album_artist: 'Angershade', catalog_number: 5, album_status: 'Released', release_date: '2025-09-07', upc: '123456789012', front_cover_url: 'https://placehold.co/600x600/0f172a/93c5fd?text=Test+LP', physical_media_url: '#', digital_download_url: '#', stream_spotify_url: '#', stream_apple_music_url: '#', stream_youtube_music_url: '#', stream_bandcamp_url: '#', album_commentary: 'This is the first test album created for the system.' };
+        testAlbum = simulate_trg_album_defaults(testAlbum);
+        db_albums.push(testAlbum);
+        db_tracks.push({ track_id: 1, album_id: testAlbum.id, track_no: 1, track_name: 'Intro', duration_seconds: 240, track_status: 'Released' }, { track_id: 2, album_id: testAlbum.id, track_no: 2, track_name: 'Main Theme', duration_seconds: 192, track_status: 'Released' });
+        simulate_fn_update_album_duration(testAlbum.id);
+
+        let devAlbum = { album_name: 'Future Sounds', album_artist: 'Yegge', album_type: 'EP', catalog_number: 12, album_status: 'In Development', release_date: null, front_cover_url: '', album_commentary: '' };
+        devAlbum = simulate_trg_album_defaults(devAlbum);
+        db_albums.push(devAlbum);
+        simulate_fn_update_album_duration(devAlbum.id);
+        
+        saveDataToStorage();
+    }
+
+    // --- RENDER FUNCTIONS ---
+    const contentArea = document.getElementById('content-area');
+    
+    function renderAdminDashboard() {
+        const template = document.getElementById('template-admin-dashboard').content.cloneNode(true);
+        const list = template.getElementById('admin-album-list');
+        list.innerHTML = '';
+        const sortedAlbums = [...db_albums].sort((a, b) => (b.release_date || '0').localeCompare(a.release_date || '0'));
+        if(sortedAlbums.length === 0){ list.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-gray-500">No albums created yet.</td></tr>`; } else {
+            sortedAlbums.forEach(album => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td class="font-bold text-white">${album.album_name}</td><td>${album.album_artist}</td><td><span class="status-pill">${album.album_status}</span></td><td>${album.release_date || 'N/A'}</td><td class="text-right space-x-2"><button class="btn-custom btn-custom-sm" onclick="location.hash='#/admin/tracks/${album.id}'">Tracks</button><button class="btn-custom btn-custom-primary btn-custom-sm" onclick="location.hash='#/admin/edit/${album.id}'">Edit</button></td>`;
+                const statusPill = row.querySelector('.status-pill');
+                statusPill.classList.add({ 'Released': 'status-released', 'Removed': 'status-removed', 'In Development': 'status-in-development' }[album.album_status] || '');
+                list.appendChild(row);
+            });
+        }
+        contentArea.innerHTML = '';
+        contentArea.appendChild(template);
+    }
+
+    function renderAlbumForm(albumId = null) {
+        const template = document.getElementById('template-album-form').content.cloneNode(true);
+        const form = template.getElementById('album-form');
+        const isEditing = albumId !== null;
+        const album = isEditing ? db_albums.find(a => a.id === albumId) : {};
+        template.getElementById('form-title').textContent = isEditing ? `Editing: ${album.album_name}` : 'Add New Album';
+        for (const key in album) { if (template.getElementById(key)) { template.getElementById(key).value = album[key] || ''; } }
+        if (isEditing) {
+            template.getElementById('album-id').value = album.id;
+            const deleteContainer = template.getElementById('delete-album-container');
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'button'; deleteButton.className = 'btn-custom btn-custom-danger'; deleteButton.textContent = 'Delete Album';
+            deleteButton.onclick = () => {
+                if(window.confirm(`Are you sure you want to delete "${album.album_name}"?`)) {
+                    db_tracks = db_tracks.filter(t => t.album_id !== album.id);
+                    db_albums = db_albums.filter(a => a.id !== album.id);
+                    saveDataToStorage();
+                    location.hash = '#/admin';
+                }
+            };
+            deleteContainer.appendChild(deleteButton);
+        }
+        form.onsubmit = (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            let albumData = Object.fromEntries(formData.entries());
+            albumData.catalog_number = parseInt(albumData.catalog_number, 10) || null;
+            albumData.id = albumData.id ? parseInt(albumData.id, 10) : null;
+            if (isEditing) {
+                let existingAlbum = db_albums.find(a => a.id === albumData.id);
+                Object.assign(existingAlbum, albumData);
+                simulate_trg_album_defaults(existingAlbum);
+            } else {
+                albumData = simulate_trg_album_defaults(albumData);
+                db_albums.push(albumData);
+            }
+            saveDataToStorage();
+            location.hash = '#/admin';
+        };
+        contentArea.innerHTML = '';
+        contentArea.appendChild(template);
+    }
+    
+    function renderTrackManager(albumId) {
+        const album = db_albums.find(a => a.id === albumId);
+        if (!album) { location.hash = '#/admin'; return; }
+        const template = document.getElementById('template-track-manager').content.cloneNode(true);
+        template.getElementById('track-manager-album-title').textContent = `${album.album_name} by ${album.album_artist}`;
+        template.getElementById('track-form-album-id').value = albumId;
+        const trackListContainer = template.getElementById('track-list');
+        const tracks = db_tracks.filter(t => t.album_id === albumId).sort((a,b) => a.track_no - b.track_no);
+        trackListContainer.innerHTML = '';
+        if (tracks.length > 0) {
+            tracks.forEach(track => {
+                const trackEl = document.createElement('div');
+                trackEl.className = 'flex items-center justify-between bg-black/20 p-3 rounded-lg border border-gray-700/50';
+                trackEl.innerHTML = `<div class="flex items-center gap-4"><span class="font-bold text-gray-400">${track.track_no}.</span><span class="text-white">${track.track_name}</span></div><div class="flex items-center gap-4"><span class="text-gray-500">${seconds_mmss(track.duration_seconds)}</span><button class="btn-custom btn-custom-danger btn-custom-sm" data-track-id="${track.track_id}">Delete</button></div>`;
+                trackListContainer.appendChild(trackEl);
+            });
+        } else { trackListContainer.innerHTML = `<p class="text-center text-gray-500 py-4">No tracks added yet.</p>`; }
+        trackListContainer.addEventListener('click', e => {
+            if (e.target.matches('[data-track-id]')) {
+                const trackIdToDelete = parseInt(e.target.dataset.trackId, 10);
+                 if(window.confirm('Are you sure you want to delete this track?')) {
+                    db_tracks = db_tracks.filter(t => t.track_id !== trackIdToDelete);
+                    simulate_fn_update_album_duration(albumId);
+                    saveDataToStorage();
+                    renderTrackManager(albumId);
+                }
+            }
+        });
+        const addTrackForm = template.getElementById('add-track-form');
+        addTrackForm.onsubmit = e => {
+            e.preventDefault();
+            const formData = new FormData(addTrackForm);
+            const newTrack = { track_id: Date.now(), album_id: albumId, track_no: parseInt(formData.get('track_no'), 10), track_name: formData.get('track_name'), duration_seconds: parseInt(formData.get('duration_seconds'), 10), track_status: 'Released' };
+            db_tracks.push(newTrack);
+            simulate_fn_update_album_duration(albumId);
+            saveDataToStorage();
+            renderTrackManager(albumId);
+        };
+        contentArea.innerHTML = '';
+        contentArea.appendChild(template);
+    }
+    
+    // --- ROUTER ---
+    function router() {
+        const hash = location.hash || '#/admin';
+        if (hash === '#/admin') renderAdminDashboard();
+        else if (hash === '#/admin/new') renderAlbumForm();
+        else if (hash.startsWith('#/admin/edit/')) renderAlbumForm(parseInt(hash.split('/')[3], 10));
+        else if (hash.startsWith('#/admin/tracks/')) renderTrackManager(parseInt(hash.split('/')[3], 10));
+        else renderAdminDashboard(); // Default admin view
+    }
+    
+    // --- APP INITIALIZATION ---
+    window.addEventListener('hashchange', router);
+    window.addEventListener('load', () => {
+        loadDataFromStorage();
+        router();
+    });
+</script>
+
+</body>
+</html>
+

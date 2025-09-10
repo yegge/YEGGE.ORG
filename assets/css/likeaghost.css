@@ -1,0 +1,175 @@
+/* =========================================================
+  LIKE A GHOST THEME - Dark and Light modes with glow effects
+  Refactor: adds RGB vars for bulletproof rgba() usage
+  ========================================================= */
+
+/* Avoid color pop on first paint */
+:root {
+  color-scheme: light dark; /* lets browsers render form controls appropriately */
+}
+html.theme-ready * {
+  transition: background-color 200ms ease, color 200ms ease, text-shadow 200ms ease;
+}
+
+.theme-toggle {
+  position: fixed;
+  inset: 16px 16px auto auto; /* top-right */
+  padding: 10px 12px;
+  font-size: 18px;
+  line-height: 1;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--code-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(var(--text-rgb), 0.08);
+}
+.theme-toggle:hover { filter: brightness(1.05); }
+.theme-toggle:active { transform: translateY(1px); }
+
+/* ---------------------------
+   DARK MODE - Ghostly white on black
+   --------------------------- */
+.dark-mode {
+  /* Colors */
+  --bg-color: #000;
+  --text-color: #f5f6f8;
+  --text-rgb: 245, 246, 248;         /* <- NEW */
+  --link-color: #e6e7ea;
+
+  --code-bg: #0c0c0c;
+  --code-text: #f2f2f2;
+
+  --border-rgb: 255, 255, 255;       /* <- NEW */
+  --border-color: rgba(var(--border-rgb), 0.08);
+}
+
+/* ---------------------------
+   LIGHT MODE - Black on white
+   --------------------------- */
+.light-mode {
+  /* Colors */
+  --bg-color: #fefefe;
+  --text-color: #0a0a0a;
+  --text-rgb: 10, 10, 10;            /* <- NEW */
+  --link-color: #222;
+
+  --code-bg: #f3f3f3;
+  --code-text: #111;
+
+  --border-rgb: 0, 0, 0;             /* <- NEW */
+  --border-color: rgba(var(--border-rgb), 0.08);
+}
+
+/* ---------------------------
+   BASE STYLES
+   --------------------------- */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Text with glow effect */
+p, li, span {
+  text-shadow:
+    0 0 0.6px currentColor,
+    0 0 6px rgba(var(--text-rgb), 0.12);
+}
+
+/* Headings with stronger glow */
+h1, h2, h3, h4, h5, h6 {
+  text-shadow:
+    0 0 0.8px currentColor,
+    0 0 8px rgba(var(--text-rgb), 0.16);
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Links */
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Code blocks */
+pre, code {
+  background: var(--code-bg);
+  color: var(--code-text);
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-family: "Courier New", monospace;
+  text-shadow: none;
+}
+
+pre {
+  padding: 16px;
+  overflow-x: auto;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+th, td {
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+th {
+  font-weight: bold;
+}
+
+/* Container for content */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Dark mode specific glow tweaks */
+.dark-mode p,
+.dark-mode li,
+.dark-mode span {
+  text-shadow:
+    0 0 0.6px rgba(var(--text-rgb), 0.45),
+    0 0 6px rgba(var(--text-rgb), 0.12);
+}
+
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+  text-shadow:
+    0 0 0.8px rgba(var(--text-rgb), 0.55),
+    0 0 8px rgba(var(--text-rgb), 0.16);
+}
+
+/* Light mode specific glow tweaks */
+.light-mode p,
+.light-mode li,
+.light-mode span {
+  text-shadow:
+    0 0 0.6px rgba(var(--text-rgb), 0.45),
+    0 0 6px rgba(var(--text-rgb), 0.12);
+}
+
+.light-mode h1,
+.light-mode h2,
+.light-mode h3,
+.light-mode h4,
+.light-mode h5,
+.light-mode h6 {
+  text-shadow:
+    0 0 0.8px rgba(var(--text-rgb), 0.55),
+    0 0 8px rgba(var(--text-rgb), 0.16);
+}

@@ -1,0 +1,61 @@
+/* Import Google Fonts (Coldsmith Pro & Chathura) */
+@import url('https://fonts.googleapis.com/css2?family=Chathura:wght@400;700&family=Colds+mith+Pro:wght@400;700&display=swap');
+
+/* Base styles for dark mode */
+:root {
+  --bg-color: #1B1B1B;       /* slate black */
+  --heading-color: #B0B0B0;  /* grey headings */
+  --para-color: #f5f6f8;     /* ghostly shimmer text */
+}
+
+[data-theme="light"] {
+  --bg-color: #f5f6f8;       /* inverted light background */
+  --heading-color: #1B1B1B;  /* dark headings */
+  --para-color: #3A3A3A;     /* softer dark for paragraphs */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--para-color);
+  font-family: 'Chathura', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 2rem;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Colds mith Pro', serif;
+  color: var(--heading-color);
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Paragraphs */
+p {
+  font-family: 'Chathura', sans-serif;
+  font-size: 1.2rem;
+  color: var(--para-color);
+  text-shadow: 0 0 6px rgba(245, 246, 248, 0.6); /* glowing ghost shimmer */
+  line-height: 1.6;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: 2px solid var(--heading-color);
+  color: var(--heading-color);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--heading-color);
+  color: var(--bg-color);
+}

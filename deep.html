@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Catalog | Your Music Portfolio</title>
+    <!-- Import Google Font: Chathura -->
+    <link href="https://fonts.googleapis.com/css2?family=Chathura:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* Dark mode base */
+        :root {
+            --bg-color: #1B1B1B;       /* slate black */
+            --ghost-color: #f5f6f8;    /* ghostly shimmer */
+            --primary-color: #8A2BE2;  /* vibrant purple */
+            --secondary-color: #9370DB; /* medium purple */
+            --accent-color: #FF69B4;   /* hot pink */
+        }
+
+        [data-theme="light"] {
+            --bg-color: #f5f6f8;       /* inverted light background */
+            --ghost-color: #1B1B1B;    /* dark ghost for light mode */
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--ghost-color);
+            font-family: 'Chathura', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            margin: 0;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Headings: larger ghostly glow */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Chathura', sans-serif;
+            font-size: 3.2rem;
+            color: var(--ghost-color);
+            text-shadow: 0 0 8px rgba(245, 246, 248, 0.65);
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Paragraphs: generous size, glowing */
+        p {
+            font-family: 'Chathura', sans-serif;
+            font-size: 1.8rem;
+            color: var(--ghost-color);
+            text-shadow: 0 0 6px rgba(245, 246, 248, 0.6);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+            font-weight: 400;
+        }
+
+        /* Theme toggle button */
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: 2px solid var(--ghost-color);
+            color: var(--ghost-color);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1.8rem;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            z-index: 1000;
+        }
+
+        .theme-toggle:hover {
+            background: var(--ghost-color);
+            color: var(--bg-color);
+        }
+
+        /* Custom button styling */
+        .btn-custom {
+            font-family: 'Chathura', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid var(--ghost-color);
+            background-color: transparent;
+            color: var(--ghost-color);
+            text-shadow: 0 0 4px rgba(245, 246, 248, 0.6);
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin: 0.5rem;
+        }
+
+        .btn-custom:hover {
+            background-color: var(--ghost-color);
+            color: var(--bg-color);
+            text-shadow: none;
+        }
+
+        .btn-primary-custom {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--ghost-color);
+        }
+
+        .btn-primary-custom:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: var(--bg-color);
+        }
+
+        /* Layout styling */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            padding: 3rem 0;
+            margin: 2rem 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--ghost-color);
+            margin-bottom: 2rem;
+        }
+
+        .nav-brand {
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: var(--ghost-color);
+            text-shadow: 0 0 8px rgba(245, 246, 248, 0.65);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-size: 2rem;
+            color: var(--ghost-color);
+            text-decoration: none;
+            text-shadow: 0 0 6px rgba(245, 246, 248, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .display-title {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .lead-text {
+            font-size: 2.4rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .card {
+            background-color: rgba(245, 246, 248, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(245, 246, 248, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 2.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-text {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .text-muted {
+            opacity: 0.7;
+        }
+
+        .player-controls {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+
+        .player-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress {
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--ghost-color);
+            width: 35%;
+        }
+
+        .player-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-player {
+            background: none;
+            border: none;
+            color: var(--ghost-color);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        .membership-section {
+            text-align: center;
+            padding: 3rem;
+            background-color: rgba(245, 246, 248, 0.05);
+            border-radius: 12px;
+            margin: 3rem 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .benefit-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .benefit-icon {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-text {
+            font-size: 1.6rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            font-size: 1.8rem;
+            background-color: rgba(245, 246, 248, 0.1);
+            border: 1px solid rgba(245, 246, 248, 0.3);
+            color: var(--ghost-color);
+            border-radius: 6px;
+            font-family: 'Chathura', sans-serif;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-check-input {
+            margin-right: 0.8rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(245, 246, 248, 0.2);
+        }
+
+        .footer-text {
+            font-size: 1.6rem;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1, h2, h3, h4, h5, h6 {
+                font-size: 2.8rem;
+            }
+            
+            p {
+                font-size: 1.6rem;
+            }
+            
+            .display-title {
+                font-size: 3.5rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle">
+        <i class="bi bi-moon-fill"></i>
+    </button>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="#" class="nav-brand">
+            <i class="bi bi-vinyl-fill"></i> MusicCatalog
+        </a>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Home</a>
+            <a href="#catalog" class="nav-link">Catalog</a>
+            <a href="#blog" class="nav-link">Blog</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+        <div>
+            <a href="#" class="btn-custom" id="loginBtn">Login</a>
+            <a href="#" class="btn-custom btn-primary-custom" id="registerBtn">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <h1 class="display-title">Discover My Musical Journey</h1>
+        <p class="lead-text">Stream exclusive tracks, read about my creative process, and join our community of music lovers.</p>
+        <div>
+            <a href="#" class="btn-custom btn-primary-custom">Join for Free <i class="bi bi-arrow-right"></i></a>
+            <a href="#catalog" class="btn-custom">Explore Catalog</a>
+        </div>
+    </section>
+
+    <!-- Music Catalog Section -->
+    <section id="catalog" class="section">
+        <h2>Music Catalog</h2>
+        <div class="grid">
+            <!-- Album 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1571330735066-03aaa9429d89?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Album Cover">
+                <div class="card-body">
+                    <h3 class="card-title">Digital Dreams</h3>
+                    <p class="card-text text-muted">Electronic • 2022 • 10 tracks</p>
+                    <p class="card-text">A journey through synthetic soundscapes and digital emotions.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="text-muted">3 streams remaining</span>
+                        <a href="#" class="btn-custom">Play Album</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Album 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Album Cover">
+                <div class="card-body">
+                    <h3 class="card-title">Acoustic Sessions</h3>
+                    <p class="card-text text-muted">Acoustic • 2021 • 8 tracks</p>
+                    <p class="card-text">Intimate acoustic arrangements recorded live in studio.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="text-muted">3 streams remaining</span>
+                        <a href="#" class="btn-custom">Play Album</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Album 3 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1511735111819-9a3f7709049c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Album Cover">
+                <div class="card-body">
+                    <h3 class="card-title">Neon Nights</h3>
+                    <p class="card-text text-muted">Synthwave • 2023 • 12 tracks</p>
+                    <p class="card-text">Retro-inspired synthwave with modern production techniques.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="text-muted">3 streams remaining</span>
+                        <a href="#" class="btn-custom">Play Album</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Music Player -->
+    <section class="section">
+        <div class="player-controls">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 class="player-title">Now Playing: Digital Dreams - Track 3</h3>
+                <span class="text-muted">2 streams remaining</span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="player-buttons">
+                <div>1:24 / 4:16</div>
+                <div>
+                    <button class="btn-player"><i class="bi bi-skip-backward"></i></button>
+                    <button class="btn-player"><i class="bi bi-pause"></i></button>
+                    <button class="btn-player"><i class="bi bi-skip-forward"></i></button>
+                </div>
+                <div>
+                    <button class="btn-player"><i class="bi bi-volume-up"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="section">
+        <h2>Latest from the Blog</h2>
+        <div class="grid">
+            <!-- Blog Post 1 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Blog Image">
+                <div class="card-body">
+                    <span class="text-muted">Production</span>
+                    <h3 class="card-title">Mixing Techniques for Electronic Music</h3>
+                    <p class="card-text">Learn how I approach mixing complex electronic arrangements to achieve clarity and power.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <small class="text-muted">April 15, 2023</small>
+                        <a href="#" class="btn-custom">Read More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blog Post 2 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Blog Image">
+                <div class="card-body">
+                    <span class="text-muted">Inspiration</span>
+                    <h3 class="card-title">Finding Creativity in Nature</h3>
+                    <p class="card-text">How spending time in natural environments influences my creative process and sound design.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <small class="text-muted">March 28, 2023</small>
+                        <a href="#" class="btn-custom">Read More</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Blog Post 3 -->
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1516924962500-2b4b3b99eba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" class="card-img" alt="Blog Image">
+                <div class="card-body">
+                    <span class="text-muted">News</span>
+                    <h3 class="card-title">New Album Announcement</h3>
+                    <p class="card-text">I'm excited to announce that my new album will be releasing this fall. Here's what to expect.</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <small class="text-muted">March 10, 2023</small>
+                        <a href="#" class="btn-custom">Read More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="#" class="btn-custom btn-primary-custom">View All Blog Posts</a>
+        </div>
+    </section>
+
+    <!-- Membership Benefits -->
+    <section class="membership-section">
+        <h2>Why Join as a Member?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="bi bi-music-note-list"></i>
+                </div>
+                <h3 class="benefit-title">Stream Exclusive Content</h3>
+                <p class="benefit-text">Access full album streams before purchase</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="bi bi-newspaper"></i>
+                </div>
+                <h3 class="benefit-title">Behind-the-Scenes Content</h3>
+                <p class="benefit-text">Get exclusive insights into my creative process</p>
+            </div>
+            <div class="benefit-item">
+                <div class="benefit-icon">
+                    <i class="bi bi-tags"></i>
+                </div>
+                <h3 class="benefit-title">Special Discounts</h3>
+                <p class="benefit-text">Receive member-only discounts on digital purchases</p>
+            </div>
+        </div>
+        <div>
+            <a href="#" class="btn-custom btn-primary-custom">Sign Up Free <i class="bi bi-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <h2>Get In Touch</h2>
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="name" class="form-label">Your Name</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" rows="5" required></textarea>
+            </div>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="newsletter">
+                <label class="form-check-label" for="newsletter">Subscribe to my newsletter</label>
+            </div>
+            <button type="submit" class="btn-custom btn-primary-custom">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-text">&copy; 2023 MusicCatalog. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or respect OS preference
+        const savedTheme = localStorage.getItem('theme') || 
+                          (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        
+        // Apply the saved theme
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        // Toggle theme on button click
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.className = 'bi bi-sun-fill';
+            } else {
+                themeIcon.className = 'bi bi-moon-fill';
+            }
+        }
+        
+        // Simple login/register placeholder
+        document.getElementById('loginBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Login functionality would open here');
+        });
+        
+        document.getElementById('registerBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert('Registration form would open here');
+        });
+    </script>
+</body>
+</html>
