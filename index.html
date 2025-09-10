@@ -1,27 +1,49 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html lang="en" class="light-mode theme-ready">
 <head>
-	<script>
-	(() => {
-	  const KEY = 'theme'; // 'dark' | 'light' | (unset = system)
-	  const mq = window.matchMedia('(prefers-color-scheme: dark)');
-	  const stored = localStorage.getItem(KEY);
-	  const root = document.documentElement;
+  <meta charset="UTF-8">
+  <title>Home – Your Site</title>
 
-	  function apply(theme) {
-	    root.classList.remove('light-mode','dark-mode');
-	    if (theme === 'dark') root.classList.add('dark-mode');
-	    else if (theme === 'light') root.classList.add('light-mode');
-	    else root.classList.add(mq.matches ? 'dark-mode' : 'light-mode'); // system default
-	  }
+  <!--  Theme / layout styles  -->
+  <link rel="stylesheet" href="assets/css/likeaghost.css">
 
-	  apply(stored ?? 'system');
+  <!--  (Optional) Anything else you need in the head -->
+</head>
+<body>
 
-	  // If user hasn't chosen a theme, follow OS changes live
-	  mq.addEventListener?.('change', () => {
-	    if (!localStorage.getItem(KEY)) apply('system');
-	  });
-	})();
-	</script>
-	
-	</head>
-	<body>
+  <!--  Header placeholder  -->
+  <div id="header"></div>
+
+  <!--  Theme‑toggle button – positioned via CSS  -->
+  <button class="theme-toggle" aria-label="Toggle light / dark theme"></button>
+
+  <!--  Main page content  -->
+  <div class="page-content container">
+    <h1>Welcome to Your Site</h1>
+    <p>This page shows how the header/footer and theme‑toggle
+      work together.</p>
+
+    <p>Try hitting the ☰ button on the left to open the menu,
+      and use the ⭐ button in the top‑right to switch between light
+      and dark modes.</p>
+
+    <pre><code>console.log("Hello, world!");</code></pre>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th>Name</th><th>Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Apple</td><td>🍎</td></tr>
+        <tr><td>2</td><td>Banana</td><td>🍌</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!--  Footer placeholder  -->
+  <div id="footer"></div>
+
+  <!--  JS that loads header/footer & wires the menu & theme toggle  -->
+  <script src="/assets/js/load-header-footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+/* Import Google Font: Chathura */
+@import url('https://fonts.googleapis.com/css2?family=Chathura:wght@400;700&display=swap');
+
+/* Dark mode base */
+:root {
+  --bg-color: #1B1B1B;       /* slate black */
+  --ghost-color: #f5f6f8;    /* ghostly shimmer */
+}
+
+[data-theme="light"] {
+  --bg-color: #f5f6f8;       /* inverted light background */
+  --ghost-color: #1B1B1B;    /* dark ghost for light mode */
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--ghost-color);
+  font-family: 'Chathura', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 2rem;
+}
+
+/* Headings: larger ghostly glow */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Chathura', sans-serif;
+  font-size: 3.2rem;
+  color: var(--ghost-color);
+  text-shadow: 0 0 8px rgba(245, 246, 248, 0.65);
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Paragraphs: generous size, glowing */
+p {
+  font-family: 'Chathura', sans-serif;
+  font-size: 1.8rem;
+  color: var(--ghost-color);
+  text-shadow: 0 0 6px rgba(245, 246, 248, 0.6);
+  line-height: 1.8;
+  margin-bottom: 1.2rem;
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: 2px solid var(--ghost-color);
+  color: var(--ghost-color);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--ghost-color);
+  color: var(--bg-color);
+}

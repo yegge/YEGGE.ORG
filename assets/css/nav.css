@@ -1,0 +1,105 @@
+/*  nav.css  */
+/* ------------------------------------------------------------
+   Basic styling for the collapsible menu, logo, and footer.
+   ------------------------------------------------------------ */
+
+/* --------- Header & Navigation --------------------------------- */
+.header-wrapper {
+  position: relative;
+  /* The header is overlaid on top of the page content if needed */
+}
+
+.logo-and-hamburger {
+  display: flex;
+  align-items: center;
+  background: #222;          /* dark bar above the menu */
+  color: #fff;
+  padding: 0.5rem 1rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+.logo-and-hamburger .logo img {
+  height: 40px;              /* adjust as you wish */
+  margin-left: auto;         /* pushes the logo to the right of the bar */
+}
+
+#menuToggle {
+  font-size: 1.5rem;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
+
+/* Side navigation */
+#sideNav {
+  position: fixed;
+  top: 0;
+  left: -260px;              /* hidden to the left */
+  width: 260px;
+  height: 100%;
+  background: #333;
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+
+#sideNav.active {
+  left: 0;                    /* slide into view */
+}
+
+#sideNav ul {
+  list-style: none;
+  margin: 0;
+  padding: 1rem 0;
+}
+
+#sideNav li {
+  margin: 0.8rem 0;
+}
+
+#sideNav a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: block;
+  padding: 0.3rem 1.2rem;
+}
+
+#sideNav a:hover,
+#sideNav a:focus {
+  background: #444;
+  color: #fff;
+}
+
+/* Push page content down so it doesn't hide behind the fixed bar */
+body > .page-content {
+  margin-top: 56px;   /* height of .logo-and-hamburger */
+  padding: 1rem;
+}
+
+/* --------- Footer ------------------------------------------------ */
+.site-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.8);   /* translucent dark */
+  color: #f0f0f0;
+  text-align: center;
+  padding: 0.6rem 0;
+  z-index: 1000;
+}
+
+.site-footer a {
+  color: #add8e6;        /* light blue */
+  text-decoration: none;
+}
+
+.site-footer a:hover,
+.site-footer a:focus {
+  text-decoration: underline;
+}
